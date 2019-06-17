@@ -18,7 +18,7 @@ var height = svgHeight - margin.top - margin.bottom;
 // and shift the latter by left and top margins.
 // =================================
 var svg = d3
-  .select("body")
+  .select("scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -29,8 +29,26 @@ var chartGroup = svg.append("g")
 
 
 // Read data from CSV
-var acs_data = d3.csv("assets/data/data.csv");
-console.log(acs_data);
-acs_data.forEach(function(data) {
-    console.log(data);
-})
+d3.csv("assets/data/data.csv").then(function(data) {
+  data.forEach(function(d) {
+    d.abbr = d.abbr;
+    d.age = +d.age;
+    d.ageMoe = +d.ageMoe;
+    d.healthcare = +d.healthcare;
+    d.healthcareHigh = +d.healthcareHigh;
+    d.id = +d.id;
+    d.income = +d.income;
+    d.incomeMoe = +d.incomeMoe;
+    d.obesity = +d.obesity;
+    d.obesityHigh = +d.obesityHigh;
+    d.obesityLow = +d.obesityLow;
+    d.poverty = +d.poverty;
+    d.povertyMoe = +d.povertyMoe;
+    d.smokes = +d.smokes;
+    d.smokesHigh = +d.smokesHigh;
+    d.smokesLow = +d.smokesLow;
+    d.state = d.state;
+  });
+console.log(data);
+console.log(data[0]);
+});
