@@ -1,4 +1,4 @@
-// Step 1: Set up our chart
+// Set up an SVG chart
 //= ================================
 var svgWidth = 960;
 var svgHeight = 500;
@@ -13,7 +13,7 @@ var margin = {
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
-// Step 2: Create an SVG wrapper,
+// Create an SVG wrapper,
 // append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 // =================================
@@ -26,11 +26,9 @@ var svg = d3
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-
-
-// Read data from CSV
-d3.csv("assets/data/data.csv").then(function(data) {
-  data.forEach(function(d) {
+function readCSV() {
+  d3.csv("assets/data/data.csv").then(function(data) { // Read data from CSV
+  data.forEach(function(d) { // Convert numeric data to number
     d.abbr = d.abbr;
     d.age = +d.age;
     d.ageMoe = +d.ageMoe;
@@ -49,6 +47,10 @@ d3.csv("assets/data/data.csv").then(function(data) {
     d.smokesLow = +d.smokesLow;
     d.state = d.state;
   });
-console.log(data);
-console.log(data[0]);
+// console.log(data);
+// return data;
 });
+// return data;
+}
+var data = readCSV();
+console.log(data);
