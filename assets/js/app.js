@@ -1,30 +1,30 @@
 // Set up an SVG chart
 //= ================================
-var svgWidth = 960;
-var svgHeight = 500;
+// var svgWidth = 960;
+// var svgHeight = 500;
 
-var margin = {
-  top: 20,
-  right: 40,
-  bottom: 60,
-  left: 50
-};
+// var margin = {
+//   top: 20,
+//   right: 40,
+//   bottom: 60,
+//   left: 50
+// };
 
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
+// var width = svgWidth - margin.left - margin.right;
+// var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper,
 // append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 // =================================
-var svg = d3
-  .select("scatter")
-  .append("svg")
-  .attr("width", svgWidth)
-  .attr("height", svgHeight);
+// var svg = d3
+//   .select("scatter")
+//   .append("svg")
+//   .attr("width", svgWidth)
+//   .attr("height", svgHeight);
 
-var chartGroup = svg.append("g")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`);
+// var chartGroup = svg.append("g")
+//   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // // d3.csv("assets/data/data.csv").then(function(data) { 
 
@@ -53,15 +53,32 @@ var chartGroup = svg.append("g")
   
 // //   return data;
 // // }
-var data = d3.csv("assets/data/data.csv").then(function(data)
-    {return data;
-    });
-console.log(data); // shows up
+
+// THIS PART IS WORKING--OK TO UNCOMMENT:
+// var data = d3.csv("assets/data/data.csv").then(function(data)
+//    {return data;
+//    });
+// console.log(data); // shows up
 // AD SE IPSUM: I only need to get IDs, X, and Y values!
 
+var data = [];
+// load data
+var data = d3.csv("assets/data/data.csv").then(function(data) {
+
+  // change string (from CSV) into number format
+  data.forEach(function(d) {
+    d.abbr = d.abbr;
+    d.obesity = +d.obesity;
+    d.poverty = +d.poverty;
+    d.smokes = +d.smokes;
+    console.log(d);
+  });
+});
+var d = data;
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  width = 960 - margin.left - margin.right,
+  height = 500 - margin.top - margin.bottom;
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -71,42 +88,32 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
  */ 
 
 // setup x 
-var xValue = function(d) { return d.Calories;}, // data -> value
-    xScale = d3.scale.linear().range([0, width]), // value -> display
+var xValue = function(d) { return d.poverty;}, // data -> value
+    xScale = d3.scaleLinear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
-    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+    xAxis = d3.axisBottom(xScale);
 
 // setup y
-var yValue = function(d) { return d["Protein (g)"];}, // data -> value
-    yScale = d3.scale.linear().range([height, 0]), // value -> display
+var yValue = function(d) { return d.smokes;}, // data -> value
+    yScale = d3.scaleLinear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
-    yAxis = d3.svg.axis().scale(yScale).orient("left");
+    yAxis = d3.axisLeft(yScale);
 
 // setup fill color
-var cValue = function(d) { return d.Manufacturer;},
-    color = d3.scale.category10();
+var cValue = function(d) { return d.obesity;},
+    color = d3.scaleOrdinal(d3.schemeCategory10);
 
 // add the graph canvas to the body of the webpage
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#scatter").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // add the tooltip area to the webpage
-var tooltip = d3.select("body").append("div")
+var tooltip = d3.select("#scatter").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
-
-// load data
-d3.csv("cereal.csv", function(error, data) {
-
-  // change string (from CSV) into number format
-  data.forEach(function(d) {
-    d.Calories = +d.Calories;
-    d["Protein (g)"] = +d["Protein (g)"];
-//    console.log(d);
-  });
 
   // don't want dots overlapping axis, so add in buffer to data domain
   xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
@@ -122,7 +129,7 @@ d3.csv("cereal.csv", function(error, data) {
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text("Calories");
+      .text("Poverty");
 
   // y-axis
   svg.append("g")
@@ -134,7 +141,7 @@ d3.csv("cereal.csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Protein (g)");
+      .text("Smokes");
 
   // draw dots
   svg.selectAll(".dot")
@@ -149,7 +156,7 @@ d3.csv("cereal.csv", function(error, data) {
           tooltip.transition()
                .duration(200)
                .style("opacity", .9);
-          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
+          tooltip.html(d.abbr + "<br/> (" + xValue(d) 
 	        + ", " + yValue(d) + ")")
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px");
@@ -181,4 +188,4 @@ d3.csv("cereal.csv", function(error, data) {
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d;})
-});
+// });
