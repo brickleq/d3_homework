@@ -26,31 +26,34 @@ var svg = d3
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-function readCSV() {
-  d3.csv("assets/data/data.csv").then(function(data) { // Read data from CSV
-  data.forEach(function(d) { // Convert numeric data to number
-    d.abbr = d.abbr;
-    d.age = +d.age;
-    d.ageMoe = +d.ageMoe;
-    d.healthcare = +d.healthcare;
-    d.healthcareHigh = +d.healthcareHigh;
-    d.id = +d.id;
-    d.income = +d.income;
-    d.incomeMoe = +d.incomeMoe;
-    d.obesity = +d.obesity;
-    d.obesityHigh = +d.obesityHigh;
-    d.obesityLow = +d.obesityLow;
-    d.poverty = +d.poverty;
-    d.povertyMoe = +d.povertyMoe;
-    d.smokes = +d.smokes;
-    d.smokesHigh = +d.smokesHigh;
-    d.smokesLow = +d.smokesLow;
-    d.state = d.state;
-  });
-// console.log(data);
-// return data;
-});
-// return data;
-}
-var data = readCSV();
-console.log(data);
+// // d3.csv("assets/data/data.csv").then(function(data) { 
+
+// //   data.forEach(d) {
+// //     d.abbr = d.abbr;
+// //     d.age = +d.age;
+// //     d.ageMoe = +d.ageMoe;
+// //     d.healthcare = +d.healthcare;
+// //     d.healthcareHigh = +d.healthcareHigh;
+// //     d.id = +d.id;
+// //     d.income = +d.income;
+// //     d.incomeMoe = +d.incomeMoe;
+// //     d.obesity = +d.obesity;
+// //     d.obesityHigh = +d.obesityHigh;
+// //     d.obesityLow = +d.obesityLow;
+// //     d.poverty = +d.poverty;
+// //     d.povertyMoe = +d.povertyMoe;
+// //     d.smokes = +d.smokes;
+// //     d.smokesHigh = +d.smokesHigh;
+// //     d.smokesLow = +d.smokesLow;
+// //     d.state = d.state;
+// //   }
+// //     return(d);
+// //   );
+// //   var data = d;
+  
+// //   return data;
+// // }
+var dataset = d3.csv("assets/data/data.csv").then(function(data)
+    {return data;
+    });
+console.log(dataset); // shows up
